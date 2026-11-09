@@ -7,14 +7,14 @@ body {
 
 @font-face {
   font-family: 'SF Pro Bold';
-  src: local('SF Pro Bold'), url('./SFPRODISPLAYBOLD.OTF') format('truetype');
+  src: local('SF Pro Bold'), url('./assets/SFPRODISPLAYBOLD.OTF') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'SF Pro Regular';
-  src: local('SF Pro Regular'), url('./SFPRODISPLAYREGULAR.OTF') format('truetype');
+  src: local('SF Pro Regular'), url('./assets/SFPRODISPLAYREGULAR.OTF') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
-import logo from './671e866a5147a0 Background Removed.76243754Processed 1.png';
-import enterbutton from './Go Back.png';
+import logo from './assets/tau.png';
+import enterbutton from './assets/send.png';
+
+const backendURL = (process.env.REACT_APP_API_URL || 'http://127.0.0.1:10000').replace(/\/+$/, '');
 
 function App() {
   const [language, setLanguage] = useState('English');
@@ -11,16 +13,13 @@ function App() {
   const [conversationHistory, setConversationHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);  // Loading state
 
-  // Replace with your backend URL
-  const backendURL = "http://127.0.0.1:10000/chat";
-  console.log(backendURL);
 
   // Clear conversation history and start a new conversation when the page loads
   useEffect(() => {
     const startNewConversation = async () => {
       try {
         // Call the backend to clear history
-        await axios.post(`${backendURL.replace('/chat', '')}/clear_history`);
+        await axios.post(`${backendURL}/clear_history`);
         setConversationHistory([]);  // Start with a fresh conversation history
       } catch (error) {
         console.error("Error clearing conversation history:", error);
@@ -32,11 +31,12 @@ function App() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    if (!inputText.trim() || isLoading) return;
     setIsLoading(true);  // Start loading state
     setResponseText('');  // Clear previous response
 
     try {
-      const response = await axios.post(backendURL, {
+      const response = await axios.post(`${backendURL}/chat`, {
         message: inputText
       });
 
@@ -60,7 +60,7 @@ function App() {
   const startNewConversation = async () => {
     try {
       // Call the backend to clear history
-      await axios.post(`${backendURL.replace('/chat', '')}/clear_history`);
+      await axios.post(`${backendURL}/clear_history`);
       
       // Refresh the page to reset the frontend state
       window.location.reload();
@@ -114,17 +114,17 @@ function App() {
 
         {/* Conversation History */}
         <div className="conversation-history">
-  {conversationHistory
-    .filter((msg, index) => index !== 0)  // Exclude the first message
-    .map((msg, index) => (
-      <div
-        key={index}
-        className={`message ${msg.role === 'assistant' ? 'assistant' : 'user'}`}
-      >
-        <strong>{msg.role === 'assistant' ? t.tau : t.you}:</strong> {msg.content}
-      </div>
-  ))}
-</div>
+          {conversationHistory
+            .filter((msg) => msg.role !== 'system')
+            .map((msg, index) => (
+              <div
+                key={index}
+                className={`message ${msg.role === 'assistant' ? 'assistant' : 'user'}`}
+              >
+                <strong>{msg.role === 'assistant' ? t.tau : t.you}:</strong> {msg.content}
+              </div>
+            ))}
+        </div>
 
         {/* Search Form - Now moved below conversation history */}
         <form className="search-form" onSubmit={handleSearch}>
@@ -135,7 +135,7 @@ function App() {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
           />
-          <button type="submit" className="search-button">
+          <button type="submit" className="search-button" disabled={isLoading || !inputText.trim()} aria-label={t.messagePlaceholder}>
             <img src={enterbutton} alt="Enter" className="arrow-icon" />
           </button>
         </form>

@@ -1,0 +1,29 @@
+# Local configuration (keep templates)
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# React / Node
+node_modules/
+build/
+coverage/
+*.log
+
+# Editors and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local validation dependencies and npm cache
+.test-deps/
+.npm-cache/
